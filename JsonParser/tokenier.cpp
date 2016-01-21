@@ -9,9 +9,7 @@ typedef enum{
 } State;
 
 extern FILE* fp;
-extern int size;
-extern Token tokenStream[1024];
-
+Token tokenValue;
 
 const int MAXBUFF = 5120;
 const int MAXLINE = 512;
@@ -39,12 +37,11 @@ void fillBuffer(){
 	}
 	int bsize = fread(&buffer[MAXLINE], 1, MAXBUFF, fp);
 	limit = &buffer[MAXLINE + bsize];
-	printf("Read\n");
     }
 }
 
 
-void scan(){
+void getToken(){
 	TokenType type = LCBracket;
 	State state =_Start;
 	char buff[102400];
@@ -72,34 +69,40 @@ void scan(){
 				state = _String;
 			}
 			else if (c == '['){
-				tokenStream[size++].tokenType = LQBracket;
-				state = _Start;
+				tokenValue.tokenType = LQBracket;
+				cp++;
+				return;
 			}
 			else if (c == ']'){
-				tokenStream[size++].tokenType = RQBracket;
-				state = _Start;
+				tokenValue.tokenType = RQBracket;
+				cp++;
+				return;
 			}
 			else if (c == '{'){
-				tokenStream[size++].tokenType = LCBracket;
-				state = _Start;
+				tokenValue.tokenType = LCBracket;
+				cp++;
+				return;
 			}
 			else if (c == '}'){
-				tokenStream[size++].tokenType = RCBracket;
-				state = _Start;
+				tokenValue.tokenType = RCBracket;
+				cp++;
+				return;
 			}
 			else if (c == ':'){
-				tokenStream[size++].tokenType = Colon;
-				state = _Start;
+				tokenValue.tokenType = Colon;
+				cp++;
+				return;
 			}
 			else if (c == ','){
-				tokenStream[size++].tokenType = Comma;
-				state = _Start;
+				tokenValue.tokenType = Comma;
+				cp++;
+				return;
 			}
 			else if (c == 'n'){
 			    if (strncmp(cp, "null",4) == 0){
-				tokenStream[size++].tokenType = Null;
-				state = _Start;
-				cp += 3;
+				tokenValue.tokenType = Null;
+				cp += 4;
+				return;
 			    }
 			    else{
 				state = _Error;
@@ -107,9 +110,9 @@ void scan(){
 			}
 			else if (c == 'f'){
 			    if (strncmp(cp, "false",5) == 0){
-				tokenStream[size++].tokenType = False;
-				state = _Start;
-				cp += 4;
+				tokenValue.tokenType = False;
+				cp += 5;
+				return;
 			    }
 			    else{
 				state = _Error;
@@ -117,9 +120,9 @@ void scan(){
 			}
 			else if (c == 't'){
 			    if (strncmp(cp, "true",4) == 0){
-				tokenStream[size++].tokenType = True;
-				state = _Start;
-				cp += 3;
+				tokenValue.tokenType = True;
+				cp += 4;
+				return;
 			    }
 			    else{
 				state = _Error;
@@ -138,12 +141,12 @@ void scan(){
 			}
 			else if(c=='\"'){
 				buff[index] = '\0';
-				tokenStream[size].tokenType = TokenType::String;
-				tokenStream[size].attribute.stringVal = (char*)malloc(sizeof(buff));
-				strcpy(tokenStream[size].attribute.stringVal, buff);
-				size++;
+				tokenValue.tokenType = TokenType::String;
+				tokenValue.attribute.stringVal = (char*)malloc(sizeof(buff));
+				strcpy(tokenValue.attribute.stringVal, buff);
 				index = 0;
-				state = _Start;
+				cp++;
+				return;
 			}
 			else{
 			    buff[index++] = c;
@@ -165,6 +168,7 @@ void scan(){
 				c = *++cp;
 			}
 			if (c == '.'){
+			    //fraction
 				int metrices = 10;
 				for (; isdigit(c = *++cp);){
 					if (c != '0'){
@@ -173,16 +177,17 @@ void scan(){
 					metrices *= 10;
 				}
 				if (c == 'e' || c == 'E'){
-					goto scen;
+					goto exponent;
 				}
 				else{
-					tokenStream[size].tokenType = Double;
-					tokenStream[size++].attribute.doubleVal = val*negative;
-					cp--;
+					tokenValue.tokenType = Double;
+					tokenValue.attribute.doubleVal = val*negative;
+					return;
 				}
 			}
 			else if (c == 'e' || c == 'E'){
-			scen:
+			    //exponent
+			    exponent:
 				c = *++cp;
 				int val2 = 0;
 				int neg = 1;
@@ -199,14 +204,14 @@ void scan(){
 				}
 				val2 *= neg;
 
-				tokenStream[size].tokenType = Double;
-				tokenStream[size++].attribute.doubleVal = val*negative*pow(10.0,val2);
-				cp--;
+				tokenValue.tokenType = Double;
+				tokenValue.attribute.doubleVal = val*negative*pow(10.0,val2);
+				return;
 			}
 			else{
-				tokenStream[size].tokenType = Int;
-				tokenStream[size++].attribute.intVal = (int)val*negative;
-				cp--;
+				tokenValue.tokenType = Int;
+				tokenValue.attribute.intVal = (int)val*negative;
+				return;
 			}
 			state = _Start;
 		}; break;

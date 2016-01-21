@@ -2,8 +2,10 @@
 #include"tokenier.h"
 #include<stdlib.h>
 
-extern Token tokenStream[1024];
-int index = 0;
+//extern Token tokenStream[1024];
+//int index = 0;
+extern Token tokenValue;
+
 
 TreeNode* Object();
 TreeNode* KeyValue();
@@ -22,11 +24,11 @@ TreeNode* createNode(nodeKind kind){
 TreeNode* JSON(){
 
 	TreeNode* root = nullptr;
-
-	if (tokenStream[index].tokenType == LCBracket){
+	getToken();
+	if (tokenValue.tokenType == LCBracket){
 		root = Object();
 	}
-	else if (tokenStream[index].tokenType == LQBracket){
+	else if (tokenValue.tokenType == LQBracket){
 		root = Array();
 	}
 	else{
@@ -36,10 +38,10 @@ TreeNode* JSON(){
 	return root;
 }
 TreeNode* Object(){
-	index++;
+	getToken();
 	TreeNode* obj = createNode(ObjectK);
 	TreeNode* first = nullptr;
-	while(tokenStream[index].tokenType != RCBracket){
+	while(tokenValue.tokenType != RCBracket){
 		if (first == nullptr){
 			first = KeyValue();
 			obj->child = first;
@@ -48,16 +50,16 @@ TreeNode* Object(){
 			first->subling = KeyValue();
 			first = first->subling;
 		}
-		if (tokenStream[index].tokenType == Comma){
-			index++;
+		if (tokenValue.tokenType == Comma){
+			getToken();
 		}
 		else {
 			break;
 		}
 	}
 
-	if (tokenStream[index].tokenType == RCBracket){
-		index++;
+	if (tokenValue.tokenType == RCBracket){
+		getToken();
 	}
 	else{
 		printf("Object error");
@@ -68,14 +70,15 @@ TreeNode* Object(){
 }
 TreeNode* KeyValue(){
 	TreeNode* key = createNode(KeyK);
-	if (tokenStream[index].tokenType == String){
-		key->val.stringVal = tokenStream[index++].attribute.stringVal;
+	if (tokenValue.tokenType == String){
+		key->val.stringVal = tokenValue.attribute.stringVal;
+		getToken();
 	}
 	else{
 		printf("Key error");
 	}
-	if (tokenStream[index].tokenType == Colon){
-		index++;
+	if (tokenValue.tokenType == Colon){
+		getToken();
 	}
 	else{
 		printf("Colon error");
@@ -84,10 +87,10 @@ TreeNode* KeyValue(){
 	return key;
 }
 TreeNode* Array(){
-	index++;
+	getToken();
 	TreeNode* ary = createNode(ArrayK);
 	TreeNode*  first = nullptr;
-	while (tokenStream[index].tokenType != RQBracket){
+	while (tokenValue.tokenType != RQBracket){
 		if (first == nullptr){
 			first = Value();
 			ary->child = first;
@@ -98,15 +101,15 @@ TreeNode* Array(){
 			first = first->subling;
 			ary->val.intVal++;
 		}
-		if (tokenStream[index].tokenType == Comma){
-			index++;
+		if (tokenValue.tokenType == Comma){
+			getToken();
 		}
 		else{
 			break;
 		}
 	}
-	if (tokenStream[index].tokenType == RQBracket){
-		index++;
+	if (tokenValue.tokenType == RQBracket){
+		getToken();
 	}
 	else{
 		printf("Array error");
@@ -115,15 +118,15 @@ TreeNode* Array(){
 }
 TreeNode* Value(){
 	TreeNode* value = nullptr;
-	switch (tokenStream[index].tokenType){
+	switch (tokenValue.tokenType){
 	case LCBracket:{value = Object(); }; break;
 	case LQBracket:{value = Array(); }; break;
-	case String:{value = createNode(StringK); value->val.stringVal = tokenStream[index].attribute.stringVal; index++; }; break;
-	case Int:{value = createNode(IntK); value->val.intVal = tokenStream[index].attribute.intVal; index++; }; break;
-	case Double:{value = createNode(DoubleK); value->val.doubleVal = tokenStream[index].attribute.doubleVal; index++;; }; break;
-	case True:{value = createNode(BooleanK); value->val.intVal = 1; index++; }; break;
-	case False:{value = createNode(BooleanK); value->val.intVal = 0; index++; }; break;
-	case Null:{value = createNode(NullK); index++; }; break;
+	case String:{value = createNode(StringK); value->val.stringVal = tokenValue.attribute.stringVal; getToken(); }; break;
+	case Int:{value = createNode(IntK); value->val.intVal = tokenValue.attribute.intVal; getToken(); }; break;
+	case Double:{value = createNode(DoubleK); value->val.doubleVal = tokenValue.attribute.doubleVal; getToken();; }; break;
+	case True:{value = createNode(BooleanK); value->val.intVal = 1; getToken(); }; break;
+	case False:{value = createNode(BooleanK); value->val.intVal = 0; getToken(); }; break;
+	case Null:{value = createNode(NullK); getToken(); }; break;
 	}
 	return value;
 }

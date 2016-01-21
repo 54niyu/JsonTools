@@ -12,15 +12,14 @@ FILE* fp;
 
 int main(){
 
-	  const char* filename = "E:\\test.json";
+	const char* filename = "E:\\test.json";
 
 	if ((fp = fopen(filename, "r")) ==nullptr){
 		printf("fail opne file\n");
 		exit(-1);
 	}
-	fillBuffer();
 
-	scan();
+	fillBuffer();
 
 	TreeNode *tree = JSON();
 
