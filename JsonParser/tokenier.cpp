@@ -6,10 +6,6 @@ typedef enum{
 	_String,
 	_Number,
 	_Error,
-	_False,
-	_True,
-	_Null,
-
 } State;
 
 extern FILE* fp;
@@ -20,17 +16,20 @@ extern Token tokenStream[1024];
 const int MAXBUFF = 5120;
 const int MAXLINE = 512;
 
+int line = 0;
 char buffer[MAXLINE+MAXBUFF+1];
 char* cp = &buffer[MAXLINE];
 char* limit = &buffer[MAXLINE];
 
-//ÊäÈë»º³åÇø
+//Input buffer
 void fillBuffer(){
     if (!feof(fp)){
 	if (cp >= limit){
+	    //init
 	    limit = &buffer[MAXLINE];
 	}
 	else{
+	    //move rest character to [MAXLINE-len,MAXLINE]  and refill from MAXLINE;
 	    int len = limit - cp;
 	    char* s = &buffer[MAXLINE - len];
 	    while (cp != limit){
@@ -40,6 +39,7 @@ void fillBuffer(){
 	}
 	int bsize = fread(&buffer[MAXLINE], 1, MAXBUFF, fp);
 	limit = &buffer[MAXLINE + bsize];
+	printf("Read\n");
     }
 }
 
@@ -60,6 +60,8 @@ void scan(){
 		switch (state){
 		case _Start:{
 			if (isspace(c)){
+			    if (c == '\n')
+				line++;
 				state = _Start;
 			}
 			else if (c == '+' || c == '-' || c == '.' || isdigit(c)){
@@ -122,7 +124,6 @@ void scan(){
 			    else{
 				state = _Error;
 			    }
-
 			}
 			else{
 				state = _Error;
@@ -154,18 +155,18 @@ void scan(){
 			int negative = 1;
 			if (c == '-'){
 				negative = -1;
-				c = *++cp;//getc(fp);
+				c = *++cp;
 			}
 			else if (c == '+'){
-				c = *++cp;//getc(fp);
+				c = *++cp;
 			}
 			for (; isdigit(c);){
 				val = val * 10 + c - '0';
-				c = *++cp;// getc(fp);
+				c = *++cp;
 			}
 			if (c == '.'){
 				int metrices = 10;
-				for (; isdigit(c = *++cp/*getc(fp)*/);){
+				for (; isdigit(c = *++cp);){
 					if (c != '0'){
 						val += (double)(c - '0') / metrices;
 					}
@@ -177,48 +178,40 @@ void scan(){
 				else{
 					tokenStream[size].tokenType = Double;
 					tokenStream[size++].attribute.doubleVal = val*negative;
-					cp--;//fseek(fp, -1, SEEK_CUR);;
+					cp--;
 				}
 			}
 			else if (c == 'e' || c == 'E'){
 			scen:
-				c = *++cp;// fgetc(fp);
+				c = *++cp;
 				int val2 = 0;
 				int neg = 1;
 				if (c == '+'){
-				    c = *++cp;// fgetc(fp);
+				    c = *++cp;
 				}
 				else if (c == '-'){
-				    c = *++cp;// fgetc(fp);
+				    c = *++cp;
 					neg = -1;
 				}
 				for (; isdigit(c);){
 					val2=val2 * 10 + c - '0';
-					c = *++cp;//fgetc(fp);
+					c = *++cp;
 				}
 				val2 *= neg;
 
 				tokenStream[size].tokenType = Double;
 				tokenStream[size++].attribute.doubleVal = val*negative*pow(10.0,val2);
-				cp--;//fseek(fp, -1, SEEK_CUR);
+				cp--;
 			}
 			else{
 				tokenStream[size].tokenType = Int;
 				tokenStream[size++].attribute.intVal = (int)val*negative;
-				cp--;// fseek(fp, -1, SEEK_CUR);
+				cp--;
 			}
 			state = _Start;
 		}; break;
-		case _Null:{
-
-		}; break;
-		case _True:{
-
-		}; break;
-		case _False:{
-
-		}; break;
 		case _Error:{
+		    printf("Error at line %d      Info: %c\n", line,*cp);
 		    return;
 		};break;
 		}
