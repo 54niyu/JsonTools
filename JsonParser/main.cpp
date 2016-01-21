@@ -4,6 +4,7 @@
 #include"parser.h"
 #include"utils.h"
 
+
 const int MAX = 1024;
 Token tokenStream[MAX];
 int size = 0;
@@ -17,7 +18,7 @@ int main(){
 		printf("fail opne file\n");
 		exit(-1);
 	}
-	double c = 10.;
+	fillBuffer();
 
 	scan();
 
@@ -25,6 +26,5 @@ int main(){
 
 	printJson(tree,0);
 
-	printf("hahahah");
 	return 0;
 }

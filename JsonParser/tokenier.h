@@ -24,4 +24,5 @@ typedef struct{
 } Token;
 
 void scan();
+void fillBuffer();
 #endif

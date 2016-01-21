@@ -47,7 +47,13 @@ TreeNode* hasMember(TreeNode* n, const char *key){
 	return nullptr;
 }
 int addMember(TreeNode* n, const char *key){
+    if (!n&&n->nodekind == ObjectK){
+	auto ptr = n->child;
+	if (ptr == nullptr){
 
+	}
+    }
+    return 0;
 }
 void printJson(TreeNode* root,int tab){
 	if (root != nullptr){
@@ -88,18 +94,28 @@ void printJson(TreeNode* root,int tab){
 			printJson(root->child,tab+2);
 		}; break;
 		case IntK:{
+		    for (int i = 0; i < tab; i++)
+			printf(" ");
 			printf("%d", root->val.intVal);
 		}; break;
 		case DoubleK:{
+		    for (int i = 0; i < tab; i++)
+			printf(" ");
 			printf("%lf", root->val.doubleVal);
 		}; break;
 		case BooleanK:{
+		    for (int i = 0; i < tab; i++)
+			printf(" ");
 			printf("%s", root->val.intVal == 0 ? "false": "true");
 		}; break;
 		case NullK:{
+		    for (int i = 0; i < tab; i++)
+			printf(" ");
 			printf("null");
 		}; break;
 		case StringK:{
+		    for (int i = 0; i < tab; i++)
+			printf(" ");
 			printf("\"%s\"", root->val.stringVal);
 		}; break;
 		default:printf("Something is Wrong");
