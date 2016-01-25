@@ -22,6 +22,7 @@ typedef struct{
 		char* stringVal;
 	} attribute;
 } Token;
+
 void getToken();
 void fillBuffer();
 #endif
