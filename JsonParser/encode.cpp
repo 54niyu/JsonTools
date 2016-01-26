@@ -136,10 +136,12 @@ int utf16leToCp(unsigned* dist,unsigned char* src, size_t size){
 	    unsigned short W1 = *ptr++;
 	    W1 = W1 << 8 + *dist;
 	    if (W1 >=0xd800 && W1<=0xdfff){
+		assert(W1 <= 0xdbff);
 		*dist = *ptr++;
 		unsigned short W2 = *ptr++;
 		W2 = W2 << 8 + *dist;
 
+		assert(W2 >= 0xdc00 && W2 <= 0xdfff);
 		*dist = W1 & 0x3ff;
 		*dist = *dist << 10;
 		*dist |= W2 & 0x3ff;
@@ -239,7 +241,7 @@ int utf32leToCp(unsigned* dist,unsigned char* src, size_t size){
     unsigned* p = dist;
     unsigned char* ptr = src;
 
-    while (ptr < src){
+    while (ptr < src+size){
 	*dist |= *ptr++;
 	*dist |= (int)*ptr++ << 8;
 	*dist |= (int)*ptr++ << 16;
@@ -253,11 +255,11 @@ int cpToUtf32le(unsigned char* dist,unsigned* src, size_t size){
     unsigned char* p = dist;
     unsigned* ptr = src;
 
-    while (ptr < src){
-	*ptr++ = *src & 0x000000ff;
-	*ptr++ = *src & 0x0000ff00;
-	*ptr++ = *src & 0x00ff0000;
-	*ptr++ = *src & 0xff000000;
+    while (ptr < src+size){
+	*ptr++ = (*src & 0x000000ff);
+	*ptr++ = (*src & 0x0000ff00)>>8;
+	*ptr++ = (*src & 0x00ff0000)>>16;
+	*ptr++ = (*src & 0xff000000)>>24;
     }
     return (dist - p);
 }
@@ -266,7 +268,7 @@ int utf32beToCp(unsigned* dist,unsigned char* src, size_t size){
     unsigned* p = dist;
     unsigned char* ptr = src;
 
-    while (ptr < src){
+    while (ptr < src+size){
 	*dist |= *ptr++;
 	*dist = *dist << 8 | *ptr++;
 	*dist = *dist << 16 | *ptr++;
@@ -280,10 +282,10 @@ int cpToUtf32be(unsigned char* dist, unsigned* src, size_t size){
     unsigned char* p = dist;
     unsigned* ptr = src;
 
-    while (ptr < src){
-	*ptr++ = *src & 0xff000000;
-	*ptr++ = *src & 0x00ff0000;
-	*ptr++ = *src & 0x0000ff00;
+    while (ptr < src+size){
+	*ptr++ = (*src & 0xff000000)>>24;
+	*ptr++ = (*src & 0x00ff0000)>>16;
+	*ptr++ = (*src & 0x0000ff00)>>8;
 	*ptr++ = *src & 0x000000ff;
     }
     return (dist - p);
