@@ -1,4 +1,7 @@
 #include"utils.h"
+#include"parser.h"
+
+//generate api
 int isInt(TreeNode* n){
 	if (n){
 		return n->nodekind == IntK;
@@ -35,6 +38,26 @@ int isNull(TreeNode* n){
 	}
 }
 
+void setInt(TreeNode* n){
+    n->nodekind = IntK;
+}
+void setDouble(TreeNode* n){
+    n->nodekind = DoubleK;
+}
+void setArray(TreeNode* n){
+    n->nodekind = ArrayK;
+}
+void setObject(TreeNode* n){
+    n->nodekind = ObjectK;
+}
+void setBool(TreeNode* n){
+    n->nodekind = BooleanK;
+}
+void setNull(TreeNode* n){
+    n->nodekind = NullK;
+}
+
+//for Object
 TreeNode* hasMember(TreeNode* n, const char *key){
 	if (!n&&n->nodekind == ObjectK){
 		TreeNode* ptr = n->child;
@@ -46,11 +69,65 @@ TreeNode* hasMember(TreeNode* n, const char *key){
 	}
 	return nullptr;
 }
-int addMember(TreeNode* n, const char *key){
-    if (!n&&n->nodekind == ObjectK){
+int addMember(TreeNode* n, const char *key, TreeNode* value){
+    if (n&&n->nodekind == ObjectK){
 	auto ptr = n->child;
 	if (ptr == nullptr){
+	    TreeNode* k= createNode(KeyK);
+	    k->val.stringVal = (char*)malloc(strlen(key) + 1);
+	    strcpy(k->val.stringVal, key);
+	    n->child = k;
+	    k->child = value;
+	    return 1;
+	}
+	else{
+	    do{
+		if (strcmp(ptr->val.stringVal, key) == 0)
+		    return 0;
+		if (ptr->subling != NULL)
+		    ptr = ptr->subling;
+		else
+		    break;
+	    } while (true);
+	    TreeNode* k = createNode(KeyK);
+	    k->val.stringVal = (char*)malloc(strlen(key) + 1);
+	    strcpy(k->val.stringVal, key);
+	    k->child = value;
+	    ptr->subling = k;
+	    return 1;
+	}
+    }
+    return 0;
+}
+int addIntMember(TreeNode* n, const char *key,int value){
+    TreeNode* temp = createNode(IntK);
+    temp->val.intVal = value;
+    return addMember(n, key, temp);
+}
+int addDoubleMember(TreeNode* n, const char* key, double value){
+    TreeNode* temp = createNode(IntK);
+    temp->val.intVal = value;
+    return addMember(n, key, temp);
+}
+int addBooleanMember(TreeNode* n, const char* key, int value){
+    TreeNode* temp = createNode(BooleanK);
+    temp->val.intVal = value;
+    return addMember(n, key, temp);
+}
+int addNullMember(TreeNode* n, const char* key){
+    TreeNode* temp = createNode(NullK);
+    return addMember(n, key, temp);
+}
 
+//for Array
+int addItem(TreeNode* n, TreeNode* value){
+    if (n&&n->nodekind ==ArrayK){
+	auto ptr = n->child;
+	if (ptr == nullptr){
+	    return 1;
+	}
+	else{
+	    return 1;
 	}
     }
     return 0;

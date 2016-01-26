@@ -15,4 +15,5 @@ typedef struct treeNode{
 } TreeNode;
 
 TreeNode* JSON();
+TreeNode* createNode(nodeKind kind);
 #endif
