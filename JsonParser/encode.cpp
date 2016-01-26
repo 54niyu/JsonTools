@@ -229,48 +229,101 @@ int cpToUtf16be(unsigned char* dist, unsigned* src, size_t size){
     }
     return (dist-p);
 }
-int utf32leToCp(unsigned* dist, const unsigned char* src, size_t size){
-    return 0;
-}
-int utf32beToCp(unsigned* dist, const unsigned char* src, size_t size){
-    return 0;
-}
 
-int main(){
-    //test test test
-    char input[] = "E:\\input.txt";
-    char output[] = "E:\\output.txt";
-    unsigned  char buffer[1024];
-    unsigned char buffer2[1024];
-    unsigned op[1024];
+/*
+    UTF-32 (or UCS-4) stands for Unicode Transformation Format 32 bits. 
+    It is a protocol to encode Unicode code points that uses exactly 32 bits per Unicode code point.
+*/
+int utf32leToCp(unsigned* dist,unsigned char* src, size_t size){
+    //convert UTF-32 Little Endian to Unicode Code Point
+    unsigned* p = dist;
+    unsigned char* ptr = src;
 
-    FILE* fp = fopen(input, "rb");
-    unsigned char a = 0x1;
-    a=a << 7;
-    printf("%x", a);
-
-    int size = 0;
-    while (!feof(fp)){
-	size=fread(buffer, 1, 1024, fp);
+    while (ptr < src){
+	*dist |= *ptr++;
+	*dist |= (int)*ptr++ << 8;
+	*dist |= (int)*ptr++ << 16;
+	*dist |= (int)*ptr++ << 24;
+	dist++;
     }
-    buffer[size] = '\0';
-
-//    int ss=utf8ToCp(op, buffer, size);
-    int ss = utf16beToCp(op, buffer+2, size-2);
- //   cpToUtf8(buffer2, op, ss);
-  //  cpToUtf16le(buffer2, op, ss);
-    cpToUtf16le(buffer2, op, ss);
-
- //   for (int i = 0; i < size; i++){
-	//printf("%x-%x ", buffer[i], buffer2[i]);
- //   }
-    FILE* ffp = fopen(output, "wb");
- fputc(0xff, ffp);
-    fputc(0xfe, ffp);   
-    fwrite(buffer2, 1, 1024, ffp);
-    printf("here");
-    return 0;
-    
-
-    
+    return (dist - p);
 }
+int cpToUtf32le(unsigned char* dist,unsigned* src, size_t size){
+    //covert Unicode Code Point to UTF-32 Little Endian
+    unsigned char* p = dist;
+    unsigned* ptr = src;
+
+    while (ptr < src){
+	*ptr++ = *src & 0x000000ff;
+	*ptr++ = *src & 0x0000ff00;
+	*ptr++ = *src & 0x00ff0000;
+	*ptr++ = *src & 0xff000000;
+    }
+    return (dist - p);
+}
+int utf32beToCp(unsigned* dist,unsigned char* src, size_t size){
+    //convert UTF-32 Big Endian to Unicode Code Point
+    unsigned* p = dist;
+    unsigned char* ptr = src;
+
+    while (ptr < src){
+	*dist |= *ptr++;
+	*dist = *dist << 8 | *ptr++;
+	*dist = *dist << 16 | *ptr++;
+	*dist = *dist << 24 | *ptr++;
+	dist++;
+    }
+    return (dist - p);;
+}
+int cpToUtf32be(unsigned char* dist, unsigned* src, size_t size){
+    //covert Unicode Code Point to UTF-32 Big Endian
+    unsigned char* p = dist;
+    unsigned* ptr = src;
+
+    while (ptr < src){
+	*ptr++ = *src & 0xff000000;
+	*ptr++ = *src & 0x00ff0000;
+	*ptr++ = *src & 0x0000ff00;
+	*ptr++ = *src & 0x000000ff;
+    }
+    return (dist - p);
+}
+
+//int main(){
+//    //test test test
+//    char input[] = "E:\\input.txt";
+//    char output[] = "E:\\output.txt";
+//    unsigned  char buffer[1024];
+//    unsigned char buffer2[1024];
+//    unsigned op[1024];
+//
+//    FILE* fp = fopen(input, "rb");
+//    unsigned char a = 0x1;
+//    a=a << 7;
+//    printf("%x", a);
+//
+//    int size = 0;
+//    while (!feof(fp)){
+//	size=fread(buffer, 1, 1024, fp);
+//    }
+//    buffer[size] = '\0';
+//
+////    int ss=utf8ToCp(op, buffer, size);
+//    int ss = utf16beToCp(op, buffer+2, size-2);
+// //   cpToUtf8(buffer2, op, ss);
+//  //  cpToUtf16le(buffer2, op, ss);
+//    cpToUtf16le(buffer2, op, ss);
+//
+// //   for (int i = 0; i < size; i++){
+//	//printf("%x-%x ", buffer[i], buffer2[i]);
+// //   }
+//    FILE* ffp = fopen(output, "wb");
+// fputc(0xff, ffp);
+//    fputc(0xfe, ffp);   
+//    fwrite(buffer2, 1, 1024, ffp);
+//    printf("here");
+//    return 0;
+//    
+//
+//    
+//}
