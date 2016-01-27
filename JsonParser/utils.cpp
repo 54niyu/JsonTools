@@ -109,6 +109,12 @@ int addDoubleMember(TreeNode* n, const char* key, double value){
     temp->val.intVal = value;
     return addMember(n, key, temp);
 }
+int addStringMember(TreeNode* n, const char* key, const char* value){
+    TreeNode* temp = createNode(StringK);
+    temp->val.stringVal = (char*)malloc(strlen(value));
+    strcpy(temp->val.stringVal, value);
+    return addMember(n, key, temp);
+}
 int addBooleanMember(TreeNode* n, const char* key, int value){
     TreeNode* temp = createNode(BooleanK);
     temp->val.intVal = value;
@@ -124,14 +130,48 @@ int addItem(TreeNode* n, TreeNode* value){
     if (n&&n->nodekind ==ArrayK){
 	auto ptr = n->child;
 	if (ptr == nullptr){
+	    n->child = value;
 	    return 1;
 	}
 	else{
+	    do{
+		if (ptr->subling != NULL)
+		    ptr = ptr->subling;
+		else
+		    break;
+	    } while (true);
+	    ptr->subling = value;
 	    return 1;
 	}
     }
     return 0;
 }
+int addIntItem(TreeNode* n, int value){
+    TreeNode* val = createNode(IntK);
+    val->val.intVal = value;
+    return addItem(n, val);
+}
+int addDoubleItem(TreeNode* n, double value){
+    TreeNode* val = createNode(DoubleK);
+    val->val.doubleVal = value;
+    return addItem(n, val);
+}
+int addStringItem(TreeNode* n, const char* value){
+    TreeNode* temp = createNode(StringK);
+    temp->val.stringVal = (char*)malloc(strlen(value));
+    strcpy(temp->val.stringVal, value);
+    return addItem(n ,temp);
+}
+int addBooleanItem(TreeNode* n, int value){
+    TreeNode* temp = createNode(BooleanK);
+    temp->val.intVal = value;
+    return addItem(n,temp);
+}
+int addNullItem(TreeNode* n){
+    TreeNode* temp = createNode(NullK);
+    return addItem(n, temp);
+}
+
 void printJson(TreeNode* root,int tab){
 	if (root != nullptr){
 
