@@ -32,7 +32,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="global.h">
+    <ClInclude Include="json.h">
       <Filter>源文件</Filter>
     </ClInclude>
   </ItemGroup>

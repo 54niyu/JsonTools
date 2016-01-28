@@ -1,6 +1,4 @@
-//#include"utils.h"
-//#include"parser.h"
-#include"global.h"
+#include"json.h"
 
 //generate api
 int isInt(TreeNode* n){

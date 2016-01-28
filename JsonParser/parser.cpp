@@ -1,10 +1,5 @@
-//#include"parser.h"
-//#include"tokenier.h"
-//#include<stdlib.h>
-#include"global.h"
+#include"json.h"
 
-//extern Token tokenStream[1024];
-//int index = 0;
 extern Token tokenValue;
 
 
@@ -22,6 +17,22 @@ TreeNode* createNode(nodeKind kind){
 	root->nodekind = kind;
 	return  root;
 }
+
+TreeNode* jsonParse(const char* value){
+    TreeNode* root = nullptr;
+    getToken();
+    if (tokenValue.tokenType == LCBracket){
+	root = Object();
+    }
+    else if (tokenValue.tokenType == LQBracket){
+	root = Array();
+    }
+    else{
+	printf("invalid");
+    }
+    return root;
+}
+
 TreeNode* JSON(){
 
 	TreeNode* root = nullptr;

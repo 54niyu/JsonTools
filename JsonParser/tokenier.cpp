@@ -1,6 +1,4 @@
-//#include"tokenier.h"
-//#include<math.h>
-#include"global.h"
+#include"json.h"
 typedef enum{
 	_Start,
 	_String,

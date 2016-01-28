@@ -1,10 +1,4 @@
-//#include<stdlib.h>
-//#include<stdio.h>
-//#include"tokenier.h"
-//#include"parser.h"
-//#include"utils.h"
-#include"global.h"
-#include"global.h"
+#include"json.h"
 FILE* fp;
 
 int main(){
