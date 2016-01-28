@@ -1,6 +1,7 @@
-#include"parser.h"
-#include"tokenier.h"
-#include<stdlib.h>
+//#include"parser.h"
+//#include"tokenier.h"
+//#include<stdlib.h>
+#include"global.h"
 
 //extern Token tokenStream[1024];
 //int index = 0;

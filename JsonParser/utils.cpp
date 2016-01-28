@@ -1,5 +1,6 @@
-#include"utils.h"
-#include"parser.h"
+//#include"utils.h"
+//#include"parser.h"
+#include"global.h"
 
 //generate api
 int isInt(TreeNode* n){
@@ -59,12 +60,13 @@ void setNull(TreeNode* n){
 
 //for Object
 TreeNode* hasMember(TreeNode* n, const char *key){
-	if (!n&&n->nodekind == ObjectK){
+	if (n&&n->nodekind == ObjectK){
 		TreeNode* ptr = n->child;
 		while (ptr){
 			if (strcmp(ptr->val.stringVal, key)){
 				return ptr->child;
 			}
+			ptr = ptr->subling;
 		}
 	}
 	return nullptr;
