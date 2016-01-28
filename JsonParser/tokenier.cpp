@@ -6,51 +6,22 @@ typedef enum{
 	_Error,
 } State;
 
-extern FILE* fp;
 Token tokenValue;
 
-const int MAXBUFF = 5120;
-const int MAXLINE = 512;
-
 int line = 0;
-char buffer[MAXLINE+MAXBUFF+1];
-char* cp = &buffer[MAXLINE];
-char* limit = &buffer[MAXLINE];
-
-//Input buffer
-void fillBuffer(){
-    if (!feof(fp)){
-	if (cp >= limit){
-	    //init
-	    limit = &buffer[MAXLINE];
-	}
-	else{
-	    //move rest character to [MAXLINE-len,MAXLINE]  and refill from MAXLINE;
-	    int len = limit - cp;
-	    char* s = &buffer[MAXLINE - len];
-	    while (cp != limit){
-		*s++ = *cp++;
-	    }
-	    cp = &buffer[MAXLINE - len];
-	}
-	int bsize = fread(&buffer[MAXLINE], 1, MAXBUFF, fp);
-	limit = &buffer[MAXLINE + bsize];
-    }
-}
-
+char* cp;//= src;// &buffer[MAXLINE];
+char* limit;// = src;// +strlen(src);// &buffer[MAXLINE];
+static char buff[102400];
 
 void getToken(){
 	TokenType type = LCBracket;
 	State state =_Start;
-	char buff[102400];
+
 	int index = 0;
 	char c;
 
 	while (cp<=limit){
 
-	    if (limit - cp < 512)
-		fillBuffer();
-	    
 		c = *cp;
 		switch (state){
 		case _Start:{
@@ -214,7 +185,7 @@ void getToken(){
 			state = _Start;
 		}; break;
 		case _Error:{
-		    printf("Error at line %d      Info: %c\n", line,*cp);
+		    printf("Error at line %d      Info: %s\n", line,cp);
 		    return;
 		};break;
 		}

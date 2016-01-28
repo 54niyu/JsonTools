@@ -1,25 +1,25 @@
 #include"json.h"
-#include<wchar.h>
 FILE* fp;
 
 int main(){
 
-    //我是中文
 	const char* filename = "E:\\test.json";
 	const char* out = "E:\\out.json";
 
-	freopen(out, "w", stdout);
 
 	if ((fp = fopen(filename, "r")) ==nullptr){
 		printf("fail opne file\n");
 		exit(-1);
 	}
 
-	fillBuffer();
+	char *val = (char*)malloc(204800);
+	int size=fread(val, 1, 204800, fp);
+	*(val + size) = '\0';
 
-	TreeNode *tree = JSON();
 
- //   TreeNode* json = createNode(ObjectK);
+	TreeNode *tree = jsonParse(val);
+	
+//   TreeNode* json = createNode(ObjectK);
  //   TreeNode* arr = createNode(ArrayK);
  //   addMember(json, "Array", arr);
  //   addIntMember(json, "Int", 10);

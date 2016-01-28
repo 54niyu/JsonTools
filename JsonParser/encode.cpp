@@ -132,12 +132,12 @@ int utf16leToCp(unsigned* dist,unsigned char* src, size_t size){
     while (ptr < src + size){
 	    *dist = *ptr++;
 	    unsigned short W1 = *ptr++;
-	    W1 = W1 << 8 + *dist;
+	    W1 = (W1 << 8) + *dist;
 	    if (W1 >=0xd800 && W1<=0xdfff){
 		assert(W1 <= 0xdbff);
 		*dist = *ptr++;
 		unsigned short W2 = *ptr++;
-		W2 = W2 << 8 + *dist;
+		W2 = (W2 << 8) + *dist;
 
 		assert(W2 >= 0xdc00 && W2 <= 0xdfff);
 		*dist = W1 & 0x3ff;

@@ -28,7 +28,7 @@ typedef struct{
     } attribute;
 } Token;
 void getToken();
-void fillBuffer();
+//void fillBuffer();
 //tokenier end
 
 //parser
@@ -45,6 +45,7 @@ typedef struct treeNode{
     } val;
 } TreeNode;
 TreeNode* JSON();
+TreeNode* jsonParse(char* value);
 TreeNode* createNode(nodeKind kind);
 //parser end
 

@@ -35,6 +35,7 @@ int isNull(TreeNode* n){
 	if (n){
 		return n->nodekind == NullK;
 	}
+	return 0;
 }
 
 void setInt(TreeNode* n){
@@ -106,7 +107,7 @@ int addIntMember(TreeNode* n, const char *key,int value){
 }
 int addDoubleMember(TreeNode* n, const char* key, double value){
     TreeNode* temp = createNode(IntK);
-    temp->val.intVal = value;
+    temp->val.doubleVal= value;
     return addMember(n, key, temp);
 }
 int addStringMember(TreeNode* n, const char* key, const char* value){

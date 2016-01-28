@@ -1,14 +1,9 @@
 #include"json.h"
 
 extern Token tokenValue;
-const char* src;
+extern char* cp;
+extern char* limit;
 
-TreeNode* Object();
-TreeNode* KeyValue();
-TreeNode* Array();
-TreeNode* ArrayValue();
-TreeNode* Value();
-TreeNode* Number();
 
 TreeNode* createNode(nodeKind kind){
 	TreeNode* root = (TreeNode*)malloc(sizeof(TreeNode));
@@ -17,10 +12,11 @@ TreeNode* createNode(nodeKind kind){
 	root->nodekind = kind;
 	return  root;
 }
-//change
-//
-TreeNode* jsonParse(const char* value){
-    src = value;
+
+TreeNode* jsonParse(char* value){
+    cp = value;
+    limit = value + strlen(value);
+
     TreeNode* root = nullptr;
     getToken();
     if (tokenValue.tokenType == LCBracket){
@@ -31,26 +27,11 @@ TreeNode* jsonParse(const char* value){
     }
     else{
 	printf("invalid");
+	return NULL;
     }
     return root;
 }
 
-TreeNode* JSON(){
-
-	TreeNode* root = nullptr;
-	getToken();
-	if (tokenValue.tokenType == LCBracket){
-		root = Object();
-	}
-	else if (tokenValue.tokenType == LQBracket){
-		root = Array();
-	}
-	else{
-		printf("invalid");
-//		exit(0);
-	}
-	return root;
-}
 TreeNode* Object(){
 	getToken();
 	TreeNode* obj = createNode(ObjectK);
@@ -68,7 +49,7 @@ TreeNode* Object(){
 			getToken();
 		}
 		else {
-			break;
+		    break;
 		}
 	}
 
@@ -77,11 +58,12 @@ TreeNode* Object(){
 	}
 	else{
 		printf("Object error");
-//		exit(0);
+		return NULL;
 	}
 
 	return obj;
 }
+
 TreeNode* KeyValue(){
 	TreeNode* key = createNode(KeyK);
 	if (tokenValue.tokenType == String){
@@ -90,16 +72,19 @@ TreeNode* KeyValue(){
 	}
 	else{
 		printf("Key error");
+		return NULL;
 	}
 	if (tokenValue.tokenType == Colon){
 		getToken();
 	}
 	else{
 		printf("Colon error");
+		return NULL;
 	}
 	key->child = Value();
 	return key;
 }
+
 TreeNode* Array(){
 	getToken();
 	TreeNode* ary = createNode(ArrayK);
@@ -119,7 +104,7 @@ TreeNode* Array(){
 			getToken();
 		}
 		else{
-			break;
+		    break;
 		}
 	}
 	if (tokenValue.tokenType == RQBracket){
@@ -127,9 +112,11 @@ TreeNode* Array(){
 	}
 	else{
 		printf("Array error");
+		return NULL;
 	}
 	return ary;
 }
+
 TreeNode* Value(){
 	TreeNode* value = nullptr;
 	switch (tokenValue.tokenType){
@@ -141,6 +128,7 @@ TreeNode* Value(){
 	case True:{value = createNode(BooleanK); value->val.intVal = 1; getToken(); }; break;
 	case False:{value = createNode(BooleanK); value->val.intVal = 0; getToken(); }; break;
 	case Null:{value = createNode(NullK); getToken(); }; break;
+	default:{printf("not valid value\n"); return NULL; };
 	}
 	return value;
 }
