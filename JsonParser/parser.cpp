@@ -18,8 +18,10 @@ TreeNode* createNode(nodeKind kind){
 	return  root;
 }
 //change
+//
 TreeNode* jsonParse(const char* value){
     TreeNode* root = nullptr;
+    getToken();
     getToken();
     if (tokenValue.tokenType == LCBracket){
 	root = Object();
