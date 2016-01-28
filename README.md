@@ -1,4 +1,10 @@
 # JsonTools
-A simple JSON parser and generator
 
-练习项目，会一步一步改善。
+		
+	A Simple JSON Parser and Generater Written by C
+	
+	
+	Support Unicode and Support transcoding
+	
+	
+	

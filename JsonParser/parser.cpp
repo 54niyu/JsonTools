@@ -10,7 +10,6 @@ TreeNode* Array();
 TreeNode* ArrayValue();
 TreeNode* Value();
 TreeNode* Number();
-
 TreeNode* createNode(nodeKind kind){
 	TreeNode* root = (TreeNode*)malloc(sizeof(TreeNode));
 	root->child = nullptr;
@@ -37,8 +36,6 @@ TreeNode* jsonParse(char* value){
     }
     return root;
 }
-
-
 TreeNode* Object(){
 	getToken();
 	TreeNode* obj = createNode(ObjectK);
