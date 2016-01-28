@@ -4,6 +4,12 @@ extern Token tokenValue;
 extern char* cp;
 extern char* limit;
 
+TreeNode* Object();
+TreeNode* KeyValue();
+TreeNode* Array();
+TreeNode* ArrayValue();
+TreeNode* Value();
+TreeNode* Number();
 
 TreeNode* createNode(nodeKind kind){
 	TreeNode* root = (TreeNode*)malloc(sizeof(TreeNode));
@@ -31,6 +37,7 @@ TreeNode* jsonParse(char* value){
     }
     return root;
 }
+
 
 TreeNode* Object(){
 	getToken();
@@ -63,7 +70,6 @@ TreeNode* Object(){
 
 	return obj;
 }
-
 TreeNode* KeyValue(){
 	TreeNode* key = createNode(KeyK);
 	if (tokenValue.tokenType == String){
@@ -84,7 +90,6 @@ TreeNode* KeyValue(){
 	key->child = Value();
 	return key;
 }
-
 TreeNode* Array(){
 	getToken();
 	TreeNode* ary = createNode(ArrayK);
@@ -116,7 +121,6 @@ TreeNode* Array(){
 	}
 	return ary;
 }
-
 TreeNode* Value(){
 	TreeNode* value = nullptr;
 	switch (tokenValue.tokenType){

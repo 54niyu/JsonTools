@@ -9,8 +9,8 @@ typedef enum{
 Token tokenValue;
 
 int line = 0;
-char* cp;//= src;// &buffer[MAXLINE];
-char* limit;// = src;// +strlen(src);// &buffer[MAXLINE];
+char* cp;
+char* limit;;
 static char buff[102400];
 
 void getToken(){
