@@ -1,7 +1,7 @@
 #include"json.h"
 
 extern Token tokenValue;
-
+const char* src;
 
 TreeNode* Object();
 TreeNode* KeyValue();
@@ -20,6 +20,7 @@ TreeNode* createNode(nodeKind kind){
 //change
 //
 TreeNode* jsonParse(const char* value){
+    src = value;
     TreeNode* root = nullptr;
     getToken();
     if (tokenValue.tokenType == LCBracket){

@@ -1,8 +1,10 @@
 #include"json.h"
+#include<wchar.h>
 FILE* fp;
 
 int main(){
 
+    //我是中文
 	const char* filename = "E:\\test.json";
 	const char* out = "E:\\out.json";
 
