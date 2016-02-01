@@ -4,25 +4,25 @@ extern Token tokenValue;
 extern char* cp;
 extern char* limit;
 
-TreeNode* Object();
-TreeNode* KeyValue();
-TreeNode* Array();
-TreeNode* ArrayValue();
-TreeNode* Value();
-TreeNode* Number();
-TreeNode* createNode(nodeKind kind){
-	TreeNode* root = (TreeNode*)malloc(sizeof(TreeNode));
-	root->child = nullptr;
-	root->subling = nullptr;
+jsonValue* Object();
+jsonValue* KeyValue();
+jsonValue* Array();
+jsonValue* ArrayValue();
+jsonValue* Value();
+jsonValue* Number();
+jsonValue* createNode(nodeKind kind){
+	jsonValue* root = (jsonValue*)malloc(sizeof(jsonValue));
+	root->child = NULL;
+	root->subling = NULL;
 	root->nodekind = kind;
 	return  root;
 }
 
-TreeNode* jsonParse(char* value){
+jsonValue* jsonParse(char* value){
     cp = value;
     limit = value + strlen(value);
 
-    TreeNode* root = nullptr;
+    jsonValue* root = NULL;
     getToken();
     if (tokenValue.tokenType == LCBracket){
 	root = Object();
@@ -36,12 +36,12 @@ TreeNode* jsonParse(char* value){
     }
     return root;
 }
-TreeNode* Object(){
+jsonValue* Object(){
 	getToken();
-	TreeNode* obj = createNode(ObjectK);
-	TreeNode* first = nullptr;
+	jsonValue* obj = createNode(ObjectK);
+	jsonValue* first = NULL;
 	while(tokenValue.tokenType != RCBracket){
-		if (first == nullptr){
+		if (first == NULL){
 			first = KeyValue();
 			obj->child = first;
 		}
@@ -67,8 +67,8 @@ TreeNode* Object(){
 
 	return obj;
 }
-TreeNode* KeyValue(){
-	TreeNode* key = createNode(KeyK);
+jsonValue* KeyValue(){
+	jsonValue* key = createNode(KeyK);
 	if (tokenValue.tokenType == String){
 		key->val.stringVal = tokenValue.attribute.stringVal;
 		getToken();
@@ -87,12 +87,12 @@ TreeNode* KeyValue(){
 	key->child = Value();
 	return key;
 }
-TreeNode* Array(){
+jsonValue* Array(){
 	getToken();
-	TreeNode* ary = createNode(ArrayK);
-	TreeNode*  first = nullptr;
+	jsonValue* ary = createNode(ArrayK);
+	jsonValue*  first = NULL;
 	while (tokenValue.tokenType != RQBracket){
-		if (first == nullptr){
+		if (first == NULL){
 			first = Value();
 			ary->child = first;
 			ary->val.intVal = 1;
@@ -118,8 +118,8 @@ TreeNode* Array(){
 	}
 	return ary;
 }
-TreeNode* Value(){
-	TreeNode* value = nullptr;
+jsonValue* Value(){
+	jsonValue* value = NULL;
 	switch (tokenValue.tokenType){
 	case LCBracket:{value = Object(); }; break;
 	case LQBracket:{value = Array(); }; break;

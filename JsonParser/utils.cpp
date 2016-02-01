@@ -1,66 +1,66 @@
 #include"json.h"
 
 //generate api
-int isInt(TreeNode* n){
+int isInt(jsonValue* n){
 	if (n){
 		return n->nodekind == IntK;
 	}
 	return 0;
 }
-int isDouble(TreeNode* n){
+int isDouble(jsonValue* n){
 	if (n){
 		return n->nodekind == DoubleK;
 	}
 	return 0;
 }
-int isArray(TreeNode* n){
+int isArray(jsonValue* n){
 	if (n){
 		return n->nodekind == ArrayK;
 	}
 	return 0;
 }
-int isObject(TreeNode* n){
+int isObject(jsonValue* n){
 	if (n){
 		return n->nodekind == ObjectK;
 	}
 	return 0;
 }
-int isBool(TreeNode* n){
+int isBool(jsonValue* n){
 	if (n){
 		return n->nodekind == BooleanK;
 	}
 	return 0;
 }
-int isNull(TreeNode* n){
+int isNull(jsonValue* n){
 	if (n){
 		return n->nodekind == NullK;
 	}
 	return 0;
 }
 
-void setInt(TreeNode* n){
+void setInt(jsonValue* n){
     n->nodekind = IntK;
 }
-void setDouble(TreeNode* n){
+void setDouble(jsonValue* n){
     n->nodekind = DoubleK;
 }
-void setArray(TreeNode* n){
+void setArray(jsonValue* n){
     n->nodekind = ArrayK;
 }
-void setObject(TreeNode* n){
+void setObject(jsonValue* n){
     n->nodekind = ObjectK;
 }
-void setBool(TreeNode* n){
+void setBool(jsonValue* n){
     n->nodekind = BooleanK;
 }
-void setNull(TreeNode* n){
+void setNull(jsonValue* n){
     n->nodekind = NullK;
 }
 
 //for Object
-TreeNode* hasMember(TreeNode* n, const char *key){
+jsonValue* hasMember(jsonValue* n, const char *key){
 	if (n&&n->nodekind == ObjectK){
-		TreeNode* ptr = n->child;
+		jsonValue* ptr = n->child;
 		while (ptr){
 			if (strcmp(ptr->val.stringVal, key)){
 				return ptr->child;
@@ -68,13 +68,13 @@ TreeNode* hasMember(TreeNode* n, const char *key){
 			ptr = ptr->subling;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
-int addMember(TreeNode* n, const char *key, TreeNode* value){
+int addMember(jsonValue* n, const char *key, jsonValue* value){
     if (n&&n->nodekind == ObjectK){
 	auto ptr = n->child;
-	if (ptr == nullptr){
-	    TreeNode* k= createNode(KeyK);
+	if (ptr == NULL){
+	    jsonValue* k= createNode(KeyK);
 	    k->val.stringVal = (char*)malloc(strlen(key) + 1);
 	    strcpy(k->val.stringVal, key);
 	    n->child = k;
@@ -90,7 +90,7 @@ int addMember(TreeNode* n, const char *key, TreeNode* value){
 		else
 		    break;
 	    } while (true);
-	    TreeNode* k = createNode(KeyK);
+	    jsonValue* k = createNode(KeyK);
 	    k->val.stringVal = (char*)malloc(strlen(key) + 1);
 	    strcpy(k->val.stringVal, key);
 	    k->child = value;
@@ -100,37 +100,37 @@ int addMember(TreeNode* n, const char *key, TreeNode* value){
     }
     return 0;
 }
-int addIntMember(TreeNode* n, const char *key,int value){
-    TreeNode* temp = createNode(IntK);
+int addIntMember(jsonValue* n, const char *key,int value){
+    jsonValue* temp = createNode(IntK);
     temp->val.intVal = value;
     return addMember(n, key, temp);
 }
-int addDoubleMember(TreeNode* n, const char* key, double value){
-    TreeNode* temp = createNode(IntK);
+int addDoubleMember(jsonValue* n, const char* key, double value){
+    jsonValue* temp = createNode(IntK);
     temp->val.doubleVal= value;
     return addMember(n, key, temp);
 }
-int addStringMember(TreeNode* n, const char* key, const char* value){
-    TreeNode* temp = createNode(StringK);
+int addStringMember(jsonValue* n, const char* key, const char* value){
+    jsonValue* temp = createNode(StringK);
     temp->val.stringVal = (char*)malloc(strlen(value));
     strcpy(temp->val.stringVal, value);
     return addMember(n, key, temp);
 }
-int addBooleanMember(TreeNode* n, const char* key, int value){
-    TreeNode* temp = createNode(BooleanK);
+int addBooleanMember(jsonValue* n, const char* key, int value){
+    jsonValue* temp = createNode(BooleanK);
     temp->val.intVal = value;
     return addMember(n, key, temp);
 }
-int addNullMember(TreeNode* n, const char* key){
-    TreeNode* temp = createNode(NullK);
+int addNullMember(jsonValue* n, const char* key){
+    jsonValue* temp = createNode(NullK);
     return addMember(n, key, temp);
 }
 
 //for Array
-int addItem(TreeNode* n, TreeNode* value){
+int addItem(jsonValue* n, jsonValue* value){
     if (n&&n->nodekind ==ArrayK){
 	auto ptr = n->child;
-	if (ptr == nullptr){
+	if (ptr == NULL){
 	    n->child = value;
 	    return 1;
 	}
@@ -147,42 +147,42 @@ int addItem(TreeNode* n, TreeNode* value){
     }
     return 0;
 }
-int addIntItem(TreeNode* n, int value){
-    TreeNode* val = createNode(IntK);
+int addIntItem(jsonValue* n, int value){
+    jsonValue* val = createNode(IntK);
     val->val.intVal = value;
     return addItem(n, val);
 }
-int addDoubleItem(TreeNode* n, double value){
-    TreeNode* val = createNode(DoubleK);
+int addDoubleItem(jsonValue* n, double value){
+    jsonValue* val = createNode(DoubleK);
     val->val.doubleVal = value;
     return addItem(n, val);
 }
-int addStringItem(TreeNode* n, const char* value){
-    TreeNode* temp = createNode(StringK);
+int addStringItem(jsonValue* n, const char* value){
+    jsonValue* temp = createNode(StringK);
     temp->val.stringVal = (char*)malloc(strlen(value));
     strcpy(temp->val.stringVal, value);
     return addItem(n ,temp);
 }
-int addBooleanItem(TreeNode* n, int value){
-    TreeNode* temp = createNode(BooleanK);
+int addBooleanItem(jsonValue* n, int value){
+    jsonValue* temp = createNode(BooleanK);
     temp->val.intVal = value;
     return addItem(n,temp);
 }
-int addNullItem(TreeNode* n){
-    TreeNode* temp = createNode(NullK);
+int addNullItem(jsonValue* n){
+    jsonValue* temp = createNode(NullK);
     return addItem(n, temp);
 }
 
-void printJson(TreeNode* root,int tab){
-	if (root != nullptr){
+void printJson(jsonValue* root,int tab){
+	if (root != NULL){
 
 		switch (root->nodekind){
 		case ArrayK:{
 			for (int i = 0; i < tab; i++)
 				printf(" ");
 			printf("[\n");
-			TreeNode* ptr = root->child;
-			while (ptr != nullptr){
+			jsonValue* ptr = root->child;
+			while (ptr != NULL){
 				printJson(ptr,tab+2);
 				printf(",\n");
 				ptr = ptr->subling;
@@ -195,8 +195,8 @@ void printJson(TreeNode* root,int tab){
 			for (int i = 0; i < tab; i++)
 				printf(" ");
 			printf("{\n");
-			TreeNode* ptr = root->child;
-			while (ptr != nullptr){
+			jsonValue* ptr = root->child;
+			while (ptr != NULL){
 				printJson(ptr,tab+2);
 				printf(",\n");
 				ptr = ptr->subling;

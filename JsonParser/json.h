@@ -34,51 +34,51 @@ void getToken();
 //parser
 typedef enum { ArrayK, ObjectK, KeyK, StringK, IntK, DoubleK, BooleanK, NullK } nodeKind;
 
-typedef struct treeNode{
-    struct treeNode* child;
-    struct treeNode* subling;
+typedef struct jsonvalue{
+    struct jsonvalue* child;
+    struct jsonvalue* subling;
     nodeKind nodekind;
     union {
 	char* stringVal;
 	int intVal;
 	double doubleVal;
     } val;
-} TreeNode;
-TreeNode* JSON();
-TreeNode* jsonParse(char* value);
-TreeNode* createNode(nodeKind kind);
+} jsonValue;
+jsonValue* JSON();
+jsonValue* jsonParse(char* value);
+jsonValue* createNode(nodeKind kind);
 //parser end
 
 //utils
-int isInt(TreeNode* n);
-int isDouble(TreeNode* n);
-int isArray(TreeNode* n);
-int isObject(TreeNode* n);
-int isBool(TreeNode* n);
-int isNull(TreeNode* n);
-void setInt(TreeNode* n);
-void setDouble(TreeNode* n);
-void setArray(TreeNode* n);
-void setObject(TreeNode* n);
-void setBool(TreeNode* n);
-void setNull(TreeNode* n);
+int isInt(jsonValue* n);
+int isDouble(jsonValue* n);
+int isArray(jsonValue* n);
+int isObject(jsonValue* n);
+int isBool(jsonValue* n);
+int isNull(jsonValue* n);
+void setInt(jsonValue* n);
+void setDouble(jsonValue* n);
+void setArray(jsonValue* n);
+void setObject(jsonValue* n);
+void setBool(jsonValue* n);
+void setNull(jsonValue* n);
 //for Object
-TreeNode* hasMember(TreeNode* n, const char *key);
-int addMember(TreeNode* n, const char *key, TreeNode* value);
-int addIntMember(TreeNode* n, const char *key, int value);
-int addDoubleMember(TreeNode* n, const char* key, double value);
-int addStringMember(TreeNode* n, const char* key, const char* value);
-int addBooleanMember(TreeNode* n, const char* key, int value);
-int addNullMember(TreeNode* n, const char* key);
+jsonValue* hasMember(jsonValue* n, const char *key);
+int addMember(jsonValue* n, const char *key, jsonValue* value);
+int addIntMember(jsonValue* n, const char *key, int value);
+int addDoubleMember(jsonValue* n, const char* key, double value);
+int addStringMember(jsonValue* n, const char* key, const char* value);
+int addBooleanMember(jsonValue* n, const char* key, int value);
+int addNullMember(jsonValue* n, const char* key);
 //for Array
-int addItem(TreeNode* n, TreeNode* value);
-int addIntItem(TreeNode* n, int value);
-int addDoubleItem(TreeNode* n, double value);
-int addStringItem(TreeNode* n, const char* value);
-int addBooleanItem(TreeNode* n, int value);
-int addNullItem(TreeNode* n);
+int addItem(jsonValue* n, jsonValue* value);
+int addIntItem(jsonValue* n, int value);
+int addDoubleItem(jsonValue* n, double value);
+int addStringItem(jsonValue* n, const char* value);
+int addBooleanItem(jsonValue* n, int value);
+int addNullItem(jsonValue* n);
 
-void printJson(TreeNode* r, int tab);
+void printJson(jsonValue* r, int tab);
 //utils  end
 
 //encode

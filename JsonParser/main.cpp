@@ -1,5 +1,8 @@
 #include"json.h"
+#include<time.h>
+
 FILE* fp;
+
 
 int main(){
 
@@ -7,7 +10,7 @@ int main(){
 	const char* out = "E:\\out.json";
 
 
-	if ((fp = fopen(filename, "r")) ==nullptr){
+	if ((fp = fopen(filename, "r")) ==NULL){
 		printf("fail opne file\n");
 		exit(-1);
 	}
@@ -16,11 +19,16 @@ int main(){
 	int size=fread(val, 1, 204800, fp);
 	*(val + size) = '\0';
 
+	clock_t start = clock();
+	jsonValue *tree = jsonParse(val);
+	clock_t end = clock();
+	int d = end - start;
+	printf("%d\n",d);
 
-	TreeNode *tree = jsonParse(val);
+
 	
-//   TreeNode* json = createNode(ObjectK);
- //   TreeNode* arr = createNode(ArrayK);
+//   jsonValue* json = createNode(ObjectK);
+ //   jsonValue* arr = createNode(ArrayK);
  //   addMember(json, "Array", arr);
  //   addIntMember(json, "Int", 10);
  //   addDoubleMember(json, "Double", 12.23);
@@ -28,17 +36,17 @@ int main(){
  //   addBooleanMember(json, "True", 1);
  //   addNullMember(json, "Null");
  //   addStringMember(json, "Fuck", "fuck you assholes");
- //   TreeNode* arr2 = hasMember(json, "Array");
+ //   jsonValue* arr2 = hasMember(json, "Array");
  //   if (arr != NULL){
 	//addIntItem(arr, 10);
-	//TreeNode* ob = createNode(ObjectK);
+	//jsonValue* ob = createNode(ObjectK);
 	//addIntMember(ob, "haah", 12);
 	//addStringMember(ob, "History", "historyer");
 	//addIntItem(arr, 12);
 	//addStringItem(arr, "fuck you asshole");
 	//addItem(arr,ob);
  //   }
-	printJson(tree,0);
+	//printJson(tree,0);
 
 	return 0;
 }

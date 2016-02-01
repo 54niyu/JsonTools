@@ -110,7 +110,7 @@ void getToken(){
 			}
 			else if(c=='\"'){
 				buff[index] = '\0';
-				tokenValue.tokenType = TokenType::String;
+				tokenValue.tokenType = String;
 				tokenValue.attribute.stringVal = (char*)malloc(sizeof(buff));
 				strcpy(tokenValue.attribute.stringVal, buff);
 				index = 0;
