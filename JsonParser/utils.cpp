@@ -1,61 +1,5 @@
 #include"json.h"
 
-//generate api
-int isInt(jsonValue* n){
-	if (n){
-		return n->nodekind == IntK;
-	}
-	return 0;
-}
-int isDouble(jsonValue* n){
-	if (n){
-		return n->nodekind == DoubleK;
-	}
-	return 0;
-}
-int isArray(jsonValue* n){
-	if (n){
-		return n->nodekind == ArrayK;
-	}
-	return 0;
-}
-int isObject(jsonValue* n){
-	if (n){
-		return n->nodekind == ObjectK;
-	}
-	return 0;
-}
-int isBool(jsonValue* n){
-	if (n){
-		return n->nodekind == BooleanK;
-	}
-	return 0;
-}
-int isNull(jsonValue* n){
-	if (n){
-		return n->nodekind == NullK;
-	}
-	return 0;
-}
-
-void setInt(jsonValue* n){
-    n->nodekind = IntK;
-}
-void setDouble(jsonValue* n){
-    n->nodekind = DoubleK;
-}
-void setArray(jsonValue* n){
-    n->nodekind = ArrayK;
-}
-void setObject(jsonValue* n){
-    n->nodekind = ObjectK;
-}
-void setBool(jsonValue* n){
-    n->nodekind = BooleanK;
-}
-void setNull(jsonValue* n){
-    n->nodekind = NullK;
-}
 
 //for Object
 jsonValue* hasMember(jsonValue* n, const char *key){
@@ -106,7 +50,7 @@ int addIntMember(jsonValue* n, const char *key,int value){
     return addMember(n, key, temp);
 }
 int addDoubleMember(jsonValue* n, const char* key, double value){
-    jsonValue* temp = createNode(IntK);
+    jsonValue* temp = createNode(DoubleK);
     temp->val.doubleVal= value;
     return addMember(n, key, temp);
 }
@@ -173,6 +117,50 @@ int addNullItem(jsonValue* n){
     return addItem(n, temp);
 }
 
+int getArrarySize(jsonValue* n){
+    if (n->nodekind != ArrayK)
+	return 0;
+    if (n->child == NULL)
+	return 0;
+    jsonValue* ptr = n->child;
+    int size = 1;
+    while (ptr->subling != NULL){
+	ptr = ptr->subling;
+	size++;
+    }
+    return size;
+}
+jsonValue* getElement(jsonValue* arr, int index){
+    if (arr->nodekind != ArrayK)
+	return NULL;
+    jsonValue* ptr = arr->child;
+    while (index >0&&ptr!=NULL){
+	ptr = ptr->subling;
+	index--;
+    }
+    return ptr;
+}
+void removeElement(jsonValue* arr, int index){
+    if (arr->nodekind != ArrayK){
+	return;
+    }
+    //add head node
+    jsonValue* head = createNode(ArrayK);
+    head->subling = arr->child;
+    jsonValue* ptr = head;
+    while (index&&ptr->subling != NULL){
+	index--;
+	ptr = ptr->subling;
+    }
+    //delete element at index
+    jsonValue* temp = ptr->subling;
+    ptr->subling = ptr->subling->subling;
+    delete(temp);
+
+    //delete head node
+    arr->child = head->subling;
+    delete(head);
+}
 void printJson(jsonValue* root,int tab){
 	if (root != NULL){
 

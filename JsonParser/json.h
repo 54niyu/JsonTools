@@ -77,7 +77,9 @@ int addDoubleItem(jsonValue* n, double value);
 int addStringItem(jsonValue* n, const char* value);
 int addBooleanItem(jsonValue* n, int value);
 int addNullItem(jsonValue* n);
-
+int getArrarySize(jsonValue* n);
+jsonValue* getElement(jsonValue* arr, int index);
+void removeElement(jsonValue* arr, int index);
 void printJson(jsonValue* r, int tab);
 //utils  end
 

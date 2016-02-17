@@ -78,7 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="encode.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="tokenier.cpp" />
     <ClCompile Include="utils.cpp" />
