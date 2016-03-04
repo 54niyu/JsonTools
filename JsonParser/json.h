@@ -80,6 +80,8 @@ int addNullItem(jsonValue* n);
 int getArrarySize(jsonValue* n);
 jsonValue* getElement(jsonValue* arr, int index);
 void removeElement(jsonValue* arr, int index);
+void removeMember(jsonValue* obj, char* key);
+void deleteValue(jsonValue* value);
 void printJson(jsonValue* r, int tab);
 //utils  end
 

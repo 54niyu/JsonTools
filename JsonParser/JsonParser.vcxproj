@@ -77,11 +77,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="encode.cpp" />
-    <ClCompile Include="test.cpp" />
-    <ClCompile Include="parser.cpp" />
-    <ClCompile Include="tokenier.cpp" />
-    <ClCompile Include="utils.cpp" />
+    <ClCompile Include="encode.c" />
+    <ClCompile Include="test.c" />
+    <ClCompile Include="parser.c" />
+    <ClCompile Include="tokenier.c" />
+    <ClCompile Include="utils.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="json.h" />
