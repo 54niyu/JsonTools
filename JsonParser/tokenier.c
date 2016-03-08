@@ -111,7 +111,7 @@ void getToken(){
 			else if(c=='\"'){
 				buff[index] = '\0';
 				tokenValue.tokenType = String;
-				tokenValue.attribute.stringVal = (char*)malloc(sizeof(buff) + 1);
+				tokenValue.attribute.stringVal = getString(index + 1);//(char*)malloc(index+1);
 				strcpy(tokenValue.attribute.stringVal, buff);
 				index = 0;
 				cp++;

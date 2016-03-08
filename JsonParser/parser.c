@@ -10,7 +10,7 @@ jsonValue* Array();
 jsonValue* ArrayValue();
 jsonValue* Value();
 jsonValue* Number();
-jsonValue* createNode(nodeKind kind){
+jsonValue* createNode2(nodeKind kind){
 	jsonValue* root = (jsonValue*)malloc(sizeof(jsonValue));
 	root->child = NULL;
 	root->subling = NULL;

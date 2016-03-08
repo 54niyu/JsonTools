@@ -97,4 +97,6 @@ int cpToUtf32le(unsigned char* dist, unsigned* src, size_t size);
 int utf32beToCp(unsigned* dist, unsigned char* src, size_t size);
 int cpToUtf32be(unsigned char* dist, unsigned* src, size_t size);
 //encode end
+void freem();
+char* getString(int size);
 #endif
